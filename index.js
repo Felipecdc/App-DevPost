@@ -1,28 +1,39 @@
-import React, {createContext, useContext, useEffect} from "react";
-import { View, Text, ActivityIndicator } from 'react-native';
-import {} from '@react-navigation/native';
+import React, {useState, useLayoutEffect} from "react";
+import { useNavigation } from '@react-navigation/native';
+import { Container, Button, ButtonText, Input } from "./styles";
 
-import AuthRoutes from "./Auth.Routes";
-import AppRoutes from "./App.Routes";
-import { AuthContext } from "../Context/Auth";
+function NewPost(){
 
-function Routes(){
+    const [post, setPost] = useState('')
+    const navigation = useNavigation();
 
-    const { signed } = useContext(AuthContext)
+    useLayoutEffect( () => {
 
-    const loading = false;
+        const options = navigation.setOptions({
+            headerRight: () => {
+                return(
+                    <Button>
+                        <ButtonText>Compartilhar</ButtonText> 
+                    </Button>
+                )
+            }
+        })
 
-    if(loading){
-        return(
-            <View style={{flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: '#36393f'}}>
-                <ActivityIndicator size={50} color="#e52246"/>
-            </View>
-        )
-    }
+    }, [navigation, post])
 
     return(
-        signed ? <AppRoutes/> : <AuthRoutes/>
+        <Container>            
+            <Input
+            placeholder="O que está acontecendo?"
+            placeholderTextColor={'#ddd'}
+            maxLength={300}
+            value={post}
+            onChangeText={ (text) => setPost(text) }
+            autoCorrect={false}
+            multiline={true}
+            />
+        </Container>
     )
 }
 
-export default Routes;
+export default NewPost;
